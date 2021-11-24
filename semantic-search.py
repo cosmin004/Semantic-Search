@@ -1,8 +1,8 @@
 import streamlit as st
 from PIL import Image
 from searcher import Searcher
-img = Image.open('assets/kogni-white.jpeg')
-st.set_page_config(page_title='Kogni', page_icon=img)
+icon = Image.open('assets/favicon.ico')
+st.set_page_config(page_title='Kogni', page_icon=icon)
 languages_mapping = {
     'en': "English",
     'sv': "Sweedish",
@@ -15,6 +15,8 @@ languages_colours = {
     'de': '#E67E22',
     'fr': '#9B59B6'
 }
+
+img = Image.open('assets/logo.png')
 col1, mid, col2 = st.columns([1,3,20])
 with col1:
     st.image(img, width=100)

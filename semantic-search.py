@@ -69,7 +69,7 @@ if st.button("Search"):
                         result['match_score_{}'.format(i+1)],
                         result['relevance_{}'.format(i+1)],
                         languages_colours[result['language']],
-                        result['original_content_{}'.format(i+1)]
+                        result['original_content_{}'.format(i+1)].replace('<', '').replace('>', '')
                     ), unsafe_allow_html=True)
         else:
             for i in range(results_num):
@@ -81,7 +81,7 @@ if st.button("Search"):
                     st.markdown("""
                         > {}
                     """.format(
-                        result['content_{}'.format(i+1)]
+                        result['content_{}'.format(i+1)].replace('<', '').replace('>', '')
                     ), unsafe_allow_html=True)
 
 

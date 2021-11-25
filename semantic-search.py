@@ -25,28 +25,64 @@ with col2:
 
 search_engine = Searcher.load_models()
 
+search_db = st.sidebar.selectbox(
+    label='Select a folder to search in', 
+    options=(
+        'International contracts',
+        'Civil codes multiple languages'
+    )
+)
+
+results_num = st.sidebar.slider(
+    label='Number of documents to return from the query', 
+    min_value=1,
+    max_value=20,
+    value=5,
+    step=1
+)
+
+print(search_db)
+print(results_num)
+
 query = st.text_area(
     "Search query",
     value="",
 )
 if st.button("Search"):
-    results = Searcher.search(query=query)
+    results = Searcher.search(
+        query=query,
+        db = search_db,
+        topk = results_num
+    )
 
     st.success('Search finished successfully.')
 
     for result in results:
-        with st.expander("Results for {}".format(languages_mapping[result['language']])):
-            for i in range(5):
-                st.markdown("""
-                    Document number {} got a matching score of **{:.2f}** and a relevance score of **{:.2f}**.
-                    > <p style='background-color: {}'>{}</p>
-                """.format(
-                    i+1,
+        if 'language' in result:
+            with st.expander("Results for {}".format(languages_mapping[result['language']])):
+                for i in range(results_num):
+                    st.markdown("""
+                        Document number {} got a matching score of **{:.2f}** and a relevance score of **{:.2f}**.
+                        > <p style='background-color: {}'>{}</p>
+                    """.format(
+                        i+1,
+                        result['match_score_{}'.format(i+1)],
+                        result['relevance_{}'.format(i+1)],
+                        languages_colours[result['language']],
+                        result['original_content_{}'.format(i+1)]
+                    ), unsafe_allow_html=True)
+        else:
+            for i in range(results_num):
+                with st.expander("{} got a matching score of {:.2f} and a relevance score of {:.2f}".format(
+                    result['document_{}'.format(i+1)],
                     result['match_score_{}'.format(i+1)],
                     result['relevance_{}'.format(i+1)],
-                    languages_colours[result['language']],
-                    result['original_content_{}'.format(i+1)]
-                ), unsafe_allow_html=True)
+                )):
+                    st.markdown("""
+                        > {}
+                    """.format(
+                        result['content_{}'.format(i+1)]
+                    ), unsafe_allow_html=True)
 
 
 else:

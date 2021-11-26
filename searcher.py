@@ -29,7 +29,7 @@ class Searcher():
         results = []
         my_bar = st.progress(0)
 
-        if db == 'Civil codes multiple languages':
+        if db == '📂 Civil codes multiple languages':
             total_corpuses = len(Searcher.corpuses.keys())
 
             step_size = 1.0 / total_corpuses
@@ -56,7 +56,7 @@ class Searcher():
                         results[-1]['translated_content_{}'.format(k+1)] = Searcher.corpuses[c][scores[0][k]['corpus_id']]
                 my_bar.progress(current_step + step_size)
                 current_step += step_size
-        elif db == 'International contracts':
+        elif db == '📂 International contracts':
             total_corpuses = 1.0
             step_size = 1.0
             current_step = 0.0

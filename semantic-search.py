@@ -26,12 +26,14 @@ with col2:
 search_engine = Searcher.load_models()
 
 search_db = st.sidebar.selectbox(
-    label='Select a folder to search in', 
+    label='Select a folder to search in 📁', 
     options=(
-        'International contracts',
-        'Civil codes multiple languages'
+        '📂 International contracts',
+        '📂 Civil codes multiple languages'
     )
 )
+# 128193	1F4C1	
+# 128194	1F4C2	
 
 results_num = st.sidebar.slider(
     label='Number of documents to return from the query', 
@@ -48,14 +50,14 @@ query = st.text_area(
     "Search query",
     value="",
 )
-if st.button("Search"):
+if st.button("Search 🔎"):
     results = Searcher.search(
         query=query,
         db = search_db,
         topk = results_num
     )
 
-    st.success('Search finished successfully.')
+    st.success('Search finished successfully. 💪🏻')
 
     for result in results:
         if 'language' in result:

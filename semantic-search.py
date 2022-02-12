@@ -29,7 +29,8 @@ search_db = st.sidebar.selectbox(
     label='Select a folder to search in 📁', 
     options=(
         '📂 International contracts',
-        '📂 Civil codes multiple languages'
+        '📂 Civil codes multiple languages',
+        '📂 Technical documentation'
     )
 )
 # 128193	1F4C1	
@@ -75,11 +76,20 @@ if st.button("Search 🔎"):
                     ), unsafe_allow_html=True)
         else:
             for i in range(results_num):
-                with st.expander("{} got a matching score of {:.2f} and a relevance score of {:.2f}".format(
-                    result['document_{}'.format(i+1)],
-                    result['match_score_{}'.format(i+1)],
-                    result['relevance_{}'.format(i+1)],
-                )):
+                if "page_{}".format(i+1) in result:
+                    content = "{} at page {} got a matching score of {:.2f} and a relevance score of {:.2f}".format(
+                        result['document_{}'.format(i+1)],
+                        result['page_{}'.format(i+1)],
+                        result['match_score_{}'.format(i+1)],
+                        result['relevance_{}'.format(i+1)],
+                    )
+                else:
+                    content = "{} got a matching score of {:.2f} and a relevance score of {:.2f}".format(
+                        result['document_{}'.format(i+1)],
+                        result['match_score_{}'.format(i+1)],
+                        result['relevance_{}'.format(i+1)],
+                    )
+                with st.expander(content):
                     st.markdown("""
                         > {}
                     """.format(

@@ -21,6 +21,8 @@ class Searcher():
         with open('assets/print_corpuses.json') as fp:
             Searcher.print_corpuses = json.load(fp)
 
+        Searcher.cisco = pd.read_csv('assets/cisco_documentation.csv')
+
         Searcher.int_docs = pd.read_csv('assets/international_docs.csv')
     
     @staticmethod
@@ -78,6 +80,31 @@ class Searcher():
                 results[-1]['match_score_{}'.format(k+1)] = scores[0][k]['score']
                 results[-1]['content_{}'.format(k+1)] = Searcher.int_docs.loc[scores[0][k]['corpus_id']]['text']
                 results[-1]['document_{}'.format(k+1)] = Searcher.int_docs.loc[scores[0][k]['corpus_id']]['doc']
+            my_bar.progress(current_step + step_size)
+            current_step += step_size
+        elif db == '📂 Technical documentation':
+            total_corpuses = 1.0
+            step_size = 1.0
+            current_step = 0.0
+
+            corpus_embeddings = torch.load('assets/bert_base_corpus_embeddings_cisco_documentation.pt')
+            scores = util.semantic_search(
+                query_embedding,
+                corpus_embeddings,
+                score_function=util.dot_score,
+                top_k=topk
+            )
+
+            results.append({})
+
+            for k in range(len(scores[0])):
+                relevance = Searcher.re_ranker.predict([[query, Searcher.cisco.loc[scores[0][k]['corpus_id']]['content']]])
+
+                results[-1]['relevance_{}'.format(k+1)] = relevance[0]
+                results[-1]['match_score_{}'.format(k+1)] = scores[0][k]['score']
+                results[-1]['content_{}'.format(k+1)] = Searcher.cisco.loc[scores[0][k]['corpus_id']]['content']
+                results[-1]['document_{}'.format(k+1)] = Searcher.cisco.loc[scores[0][k]['corpus_id']]['docname']
+                results[-1]['page_{}'.format(k+1)] = Searcher.cisco.loc[scores[0][k]['corpus_id']]['page']
             my_bar.progress(current_step + step_size)
             current_step += step_size
 
